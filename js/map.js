@@ -1,12 +1,11 @@
 var initLat = 37.765, initLng = -122.447;
 
 
-var GoogleMap = function(locations, availableLocations, displayingLocation) {
+var GoogleMap = function(locations, displayingLocation) {
     this.map = new google.maps.Map(document.querySelector('#map'));
     this.geocoder = new google.maps.Geocoder();
     this.places = new google.maps.places.PlacesService(this.map);
     this.locations = locations;
-    this.availableLocations = availableLocations;
     this.displayingLocation = displayingLocation;
     this.infowindow = null;
 
@@ -22,16 +21,14 @@ GoogleMap.prototype.initMap = function() {
 
     google.maps.event.trigger(self.map, "resize");
 
-    self.map.addListener('click', function(e) {
-        self.searchNearbyRestaurants(e.latLng);
-    });
+    self.searchNearbyRestaurants(new google.maps.LatLng(initLat, initLng));
 };
 
 
 // animate marker and display info window when user clicks on list element
 GoogleMap.prototype.clickLocationResponse = function(location)  {
     var self = this;
-    var marker = location.marker();
+    var marker = location.marker;
     //self.map.panTo(location.latLng());
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function () {
@@ -44,53 +41,35 @@ GoogleMap.prototype.clickLocationResponse = function(location)  {
 
 GoogleMap.prototype.searchNearbyRestaurants = function(latLng)  {
     var self = this;
-    self.places.nearbySearch({location: latLng, radius: 1500, type: ['restaurant']},
+    self.places.nearbySearch({location: latLng, radius: 5000, type: ['restaurant']},
         function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK){
-                self.setAvailableLocationsList(results);
+                self.populateLocations(results);
             }   else {
-                alert("Couldn't find locations for this search");
+                alert("Failed requesting from Google Places API, please try again later.");
             }
     });
 };
 
 
-// populate modal and availableLocations observableArray with search results
-GoogleMap.prototype.setAvailableLocationsList = function(results) {
+// populate locations observableArray with search results
+GoogleMap.prototype.populateLocations = function(results) {
     var self = this;
-    var i, location, availableLocationsArray = [];
+    var i, location;
     for(i = 0; i < Math.min(results.length, 5); i++){
         location = results[i];
-        availableLocationsArray.push(new Location({
+        self.locations.push(new Location({
             name: location.name,
             address: location.vicinity,
             latLng: location.geometry.location,
             placeId: location.place_id
         }));
-    }
-    self.availableLocations(availableLocationsArray);
-    $('#myModal').modal();
-    $("#myModal input[type=radio]:first").attr('checked', true);
-};
-
-
-// add clicked location to locations observableArray and hide modal
-GoogleMap.prototype.addLocationSelected = function() {
-    var self = this;
-    var i, location, selectedAddress = $('input[name="availableLocations"]:checked').val();
-
-    for (i = 0; i < self.availableLocations().length; i++)  {
-        location = self.availableLocations()[i];
-        if (location.address() === selectedAddress)  {
-            self.addMarker(location);
-            $('#myModal').modal('hide');
-            break;
-        }
+        self.addMarker(self.locations()[i]);
     }
 };
 
 
-// add marker at given location and push location to locations observableArray
+// add marker at given location to locations observableArray
 GoogleMap.prototype.addMarker = function(location) {
     var self = this;
     var marker = new google.maps.Marker({
@@ -107,12 +86,11 @@ GoogleMap.prototype.addMarker = function(location) {
         self.displayingLocation(location);
         self.renderInfowindow();
     });
-
-    location.marker(marker);
-    self.locations.push(location);
+    location.marker = marker;
 };
 
 
+// search for info from places service
 GoogleMap.prototype.renderInfowindow = function()  {
     var self = this;
     self.places.getDetails({placeId: self.displayingLocation().placeId()}, function(placeDetails, status) {
@@ -125,12 +103,12 @@ GoogleMap.prototype.renderInfowindow = function()  {
 };
 
 
+// populate info window with search results returned from places service
 GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
     var self = this;
-    //console.log(placeDetails);
     if (self.infowindow != null)  self.infowindow.close();
 
-    if (placeDetails === null)  {
+    if (placeDetails === null)  {       // display error div if failure
         self.infowindow = new google.maps.InfoWindow({
             content: $('#errorInfowindowContent').clone()[0]
         });
@@ -145,7 +123,7 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
             content: $('#infowindowContent').clone()[0]
         });
     }
-    self.infowindow.open(self.map, self.displayingLocation().marker());
+    self.infowindow.open(self.map, self.displayingLocation().marker);
 };
 
 
@@ -162,7 +140,7 @@ GoogleMap.prototype.showAllMarkers = function() {
 // show marker of given location
 GoogleMap.prototype.showMarker = function(location) {
     var self = this;
-    location.marker().setMap(self.map);
+    location.marker.setMap(self.map);
     location.display(true);
 };
 
@@ -170,6 +148,6 @@ GoogleMap.prototype.showMarker = function(location) {
 // hide marker of given location
 GoogleMap.prototype.hideMarker = function(location)  {
     var self = this;
-    location.marker().setMap(null);
+    location.marker.setMap(null);
     location.display(false);
 };

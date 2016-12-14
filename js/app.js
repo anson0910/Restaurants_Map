@@ -1,4 +1,5 @@
 var Location = function(data)  {
+    // places service information
     this.name = ko.observable(data.name);
     this.address = ko.observable(data.address);
     this.latLng = ko.observable(data.latLng);
@@ -9,7 +10,8 @@ var Location = function(data)  {
     this.open_now = ko.observable();
     this.open_text = ko.observableArray([]);
 
-    this.marker = ko.observable('');
+    this.marker = null;
+    // whether or not display this location
     this.display = ko.observable(true);
     this.text = ko.computed(function()  {
         return this.name() + ',\xa0\xa0\xa0\xa0' + this.address();
@@ -21,24 +23,18 @@ var viewModel = function()  {
     var self = this;
 
     self.locations = ko.observableArray([]);
-    self.availableLocations = ko.observableArray([]);
     // current location with info window open
     self.displayingLocation = ko.observable();
     self.available = ko.observable(true);
-    self.googleMap = new GoogleMap(self.locations, self.availableLocations, self.displayingLocation);
+    self.googleMap = new GoogleMap(self.locations, self.displayingLocation);
     self.searchInput = ko.observable('');
     this.displayAlert = ko.computed(function()  {
         return self.locations().length > 0;
     }, this);
 
-
+    /*
     self.init = function()  {
-        // click event for modal button
-        $('#btnAddAvailableLocation').click(function(event) {
-            self.googleMap.addLocationSelected();
-            event.preventDefault();
-        });
-    };
+    };*/
 
 
     // response when user clicks on list item in restaurant list
@@ -66,7 +62,7 @@ var viewModel = function()  {
     };
 
 
-    self.init();
+    //self.init();
 };
 
 
