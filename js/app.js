@@ -41,13 +41,7 @@ var viewModel = function()  {
     };
 
 
-    // delete location and marker when user clicks on list's trashcan span
-    self.removeLocation = function(location)  {
-        self.googleMap.hideMarker(location);
-        self.locations.remove(location);
-    };
-
-
+    // response when user clicks on list item in restaurant list
     self.clickLocationResponse = function(location)  {
         self.googleMap.clickLocationResponse(location);
     };
