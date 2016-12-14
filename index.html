@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurants Map</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <br>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="submit">Search</button>
+                    </span>
+                    <input type="search" class="form-control" id="search" placeholder="Search for restaurants you have added!" data-bind="value: searchInput, valueUpdate: 'afterkeydown', event: { keyup: filterList }">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-3">
+                <h4 class="list-group-item">List of Restaurants</h4>
+                <ul class="list-group" data-bind="foreach: locations">
+                    <li class="list-group-item" data-bind="visible: display">
+                        <a href="#" data-bind="text: name, click: $parent.clickLocationResponse"></a>
+                        <a class="trash" href="#"><span class="glyphicon glyphicon-trash pull-right" data-bind="click: $parent.removeLocation"></span></a>
+
+                    </li>
+                </ul>
+                <div class="alert alert-info" data-bind="visible: displayAlert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    Click on restaurant name or pin to get more information!
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-9">
+                <div id="map-div">
+                  <h3 id="map-hint">Click on the map to create pins of restaurants on the map!</h3>
+                  <div id="map"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display:none">
+
+            <div id="infowindowContent">
+                <div data-bind="with: displayingLocation">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4 data-bind="text: name"></h4>
+                            <p id="open" data-bind="visible: open_now"><b>Open</b></p>
+                            <p id="closed" data-bind="visible: !open_now()"><b>Closed</b></p>
+                            <p>Phone&nbsp;:&nbsp;<span data-bind="text: formatted_phone_number"></span></p>
+                            <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
+                            <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
+                            <p>Open Hours&nbsp;:&nbsp;</p>
+                            <ul data-bind="foreach: open_text">
+                                <li data-bind="text: $data"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorInfowindowContent">
+                <div data-bind="with: displayingLocation">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4 data-bind="text: name"></h4>
+                            <p id="error">Error getting information from Google place details service.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Please confirm the location to add</h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div id="available-locations" class="form-group" data-bind="foreach: availableLocations">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="availableLocations" data-bind="value: address" required>
+                                    <span data-bind="text: text"></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnAddAvailableLocation" type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="js/lib/jquery-3.1.1.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/knockout-3.2.0.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
