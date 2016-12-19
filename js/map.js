@@ -85,48 +85,33 @@ GoogleMap.prototype.addMarker = function(location) {
 GoogleMap.prototype.renderInfowindow = function()  {
     var self = this;
     self.places.getDetails({placeId: self.displayingLocation().placeId()}, function(placeDetails, status) {
+        if (self.infowindow != null)  self.infowindow.close();
+
+        // populate info window with search results returned from places service
         if (status == google.maps.places.PlacesServiceStatus.OK)  {
-            self.openInfoWindow(placeDetails);
+            self.displayingLocation().placesServiceSuccess(true);
+            self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
+            self.displayingLocation().website(placeDetails.website);
+            self.displayingLocation().rating(placeDetails.rating);
+            self.displayingLocation().open_now(placeDetails.opening_hours.open_now);
+            Foursquare.prototype.getResults(self.displayingLocation(), self.openInfoWindow, self);
         }   else  {
-            self.openInfoWindow(null);
+            self.displayingLocation().placesServiceSuccess(false);
+            self.openInfoWindow([], self);
         }
     });
 };
 
 
-// populate info window with search results returned from places service
-GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
-    var self = this;
-    if (self.infowindow != null)  self.infowindow.close();
-
-    if (placeDetails === null)  {
-        self.displayingLocation().placesServiceSuccess(false);
-    }  else  {
-        self.displayingLocation().placesServiceSuccess(true);
-        self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
-        self.displayingLocation().website(placeDetails.website);
-        self.displayingLocation().rating(placeDetails.rating);
-        self.displayingLocation().open_now(placeDetails.opening_hours.open_now);
-
-        Foursquare.prototype.getResults(self.displayingLocation(), self.callback, self);
-    }
-
-
-};
-
-GoogleMap.prototype.callback = function(foursquareResults, googleMap)  {
+GoogleMap.prototype.openInfoWindow = function(foursquareResults, googleMap)  {
     var self = googleMap;
-    if (foursquareResults)  {
-        console.log(foursquareResults);
-        var i, venue;
+    if (foursquareResults.length > 0)  {
+        console.log('here');
         self.displayingLocation().foursquareSuccess(true);
         self.displayingLocation().foursquareResults(foursquareResults);
-        /*
-        for (i = 0; i < foursquareResults.length; i++)  {
-            console.log('here');
-            venue = foursquareResults[i];
-            self.displayingLocation().foursquareResults.push(venue);
-        }*/
+    }   else {
+        self.displayingLocation().foursquareSuccess(false);
+        self.displayingLocation().foursquareResults([]);
     }
 
     self.infowindow = new google.maps.InfoWindow({

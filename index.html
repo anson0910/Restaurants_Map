@@ -65,14 +65,21 @@
                         <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
                         <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
 
-                        <span data-bind="visible: foursquareSuccess">what</span>
+                        <p data-bind="visible: foursquareSuccess">Nearby trending venues:</p>
+                        <p class="error" data-bind="visible: !foursquareSuccess()">
+                            Error getting information from Foursquares service.
+                        </p>
                         <ul data-bind="foreach: foursquareResults">
-                            <li data-bind="text: name">what</li>
+                            <li>
+                                <div data-bind="text: name"></div>
+                                <div>Checkins on Foursquare&nbsp;:&nbsp;<span data-bind="text: checkins"></span></div>
+                                <div>Website&nbsp;:&nbsp;<a data-bind="text: url, attr: { href: url}"></a></div>
+                            </li>
                         </ul>
                     </div>
 
                     <div data-bind="visible: !placesServiceSuccess()">
-                        <p id="error">Error getting information from Google place details service.</p>
+                        <p class="error">Error getting information from Google place details service.</p>
                     </div>
                 </div>
             </div>

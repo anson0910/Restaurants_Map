@@ -1,3 +1,5 @@
+'use strict';
+
 var Foursquare = function(name, checkins, url)  {
     this.name = name;
     this.checkins = checkins;
@@ -8,19 +10,18 @@ var Foursquare = function(name, checkins, url)  {
 /*
     Given a knockout observable location,
     searches nearby foursquare locoations at that location,
-    and populates location's foursquareResults array,
-    or sets foursquareSuccess to false if error happens.
+    and calls  infoWindowCallback function
+    with populated array of Foursquare objects,
+    or empty array if error happens.
 */
-Foursquare.prototype.getResults = function(location, callback, googleMap)  {
+Foursquare.prototype.getResults = function(location, openInfoWindowCallback, googleMap)  {
     var self = this;
     var ll = location.latLng().lat() + ',' + location.latLng().lng();
-    foursquareResults = [];
-
 
     $.ajax({
         method: 'GET',
         dataType: 'jsonp',
-        url: 'https://api.foursquare.com/v2/venues/trending',
+        url: 'https://apii.foursquare.com/v2/venues/trending',
         data: {
             oauth_token: 'OFREDHZW2VF3DVRJ00UE1DPDGTNSDSI5M3NSFZBHEUJ05US0',
             ll: ll,
@@ -29,7 +30,7 @@ Foursquare.prototype.getResults = function(location, callback, googleMap)  {
     })
     .done(function(data) {
         var trendingVenues = data.response.venues;
-        var i, venue, checkinsCount;
+        var i, venue, checkinsCount, foursquareResults = [];;
         for (i = 0; i < Math.min(trendingVenues.length, 5); i++)  {
             venue = trendingVenues[i];
             checkinsCount = 0;
@@ -39,13 +40,10 @@ Foursquare.prototype.getResults = function(location, callback, googleMap)  {
                 venue.name, checkinsCount, venue.url
             ));
         }
-        console.log(foursquareResults);
-        console.log(foursquareResults.length);
-        callback(foursquareResults, googleMap);
+        openInfoWindowCallback(foursquareResults, googleMap);
     })
     .fail(function(){
-        //location.foursquareSuccess(false);
-        alert('There was an error trying to get venues from Foursquare');
+        openInfoWindowCallback([], googleMap);
     });
 
 
