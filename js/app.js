@@ -19,7 +19,7 @@ var Location = function(data)  {
 };
 
 
-var viewModel = function()  {
+var ViewModel = function()  {
     var self = this;
 
     self.locations = ko.observableArray([]);
@@ -61,9 +61,22 @@ var viewModel = function()  {
         }
     };
 
-
-    //self.init();
 };
 
 
-ko.applyBindings(new viewModel());
+// Initialization funciton called after google map api is called
+var init = function()  {
+
+    // Initialize map
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: initLat, lng: initLng},
+        zoom: 13
+    });
+
+    ko.applyBindings(new ViewModel());
+};
+
+
+var googleError = function()  {
+    alert('Google maps failed to load, please try again later.');
+};

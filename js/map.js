@@ -1,27 +1,16 @@
+var map;
 var initLat = 37.765, initLng = -122.447;
 
 
 var GoogleMap = function(locations, displayingLocation) {
-    this.map = new google.maps.Map(document.querySelector('#map'));
+    google.maps.event.trigger(map, "resize");
     this.geocoder = new google.maps.Geocoder();
-    this.places = new google.maps.places.PlacesService(this.map);
+    this.places = new google.maps.places.PlacesService(map);
     this.locations = locations;
     this.displayingLocation = displayingLocation;
     this.infowindow = null;
 
-    this.initMap();
-};
-
-
-GoogleMap.prototype.initMap = function() {
-    var self = this;
-
-    self.map.setCenter({lat: initLat, lng: initLng});
-    self.map.setZoom(13);
-
-    google.maps.event.trigger(self.map, "resize");
-
-    self.searchNearbyRestaurants(new google.maps.LatLng(initLat, initLng));
+    this.searchNearbyRestaurants(new google.maps.LatLng(initLat, initLng));
 };
 
 
@@ -74,7 +63,7 @@ GoogleMap.prototype.addMarker = function(location) {
     var self = this;
     var marker = new google.maps.Marker({
         position: location.latLng(),
-        map: self.map,
+        map: map,
         animation: google.maps.Animation.DROP
     });
 
@@ -123,7 +112,7 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
             content: $('#infowindowContent').clone()[0]
         });
     }
-    self.infowindow.open(self.map, self.displayingLocation().marker);
+    self.infowindow.open(map, self.displayingLocation().marker);
 };
 
 
@@ -140,7 +129,7 @@ GoogleMap.prototype.showAllMarkers = function() {
 // show marker of given location
 GoogleMap.prototype.showMarker = function(location) {
     var self = this;
-    location.marker.setMap(self.map);
+    location.marker.setVisible(true);
     location.display(true);
 };
 
@@ -148,6 +137,6 @@ GoogleMap.prototype.showMarker = function(location) {
 // hide marker of given location
 GoogleMap.prototype.hideMarker = function(location)  {
     var self = this;
-    location.marker.setMap(null);
+    location.marker.setVisible(false);
     location.display(false);
 };
