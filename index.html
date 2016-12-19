@@ -50,31 +50,6 @@
             </div>
         </main>
 
-
-        <div style="display:none">
-
-            <div id="infowindowContent">
-                <div data-bind="with: displayingLocation">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <h4 data-bind="text: name"></h4>
-                            <p id="open" data-bind="visible: open_now"><b>Open</b></p>
-                            <p id="closed" data-bind="visible: !open_now()"><b>Closed</b></p>
-                            <p>Phone&nbsp;:&nbsp;<span data-bind="text: formatted_phone_number"></span></p>
-                            <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
-                            <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
-                            <p>Open Hours&nbsp;:&nbsp;</p>
-                            <ul data-bind="foreach: open_text">
-                                <li data-bind="text: $data"></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-
     </div>
 
 

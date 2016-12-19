@@ -9,8 +9,6 @@ var Location = function(data)  {
     this.formatted_phone_number = ko.observable();
     this.website = ko.observable();
     this.rating = ko.observable();
-    this.open_now = ko.observable();
-    this.open_text = ko.observableArray([]);
 
     this.marker = null;
     // whether or not display this location

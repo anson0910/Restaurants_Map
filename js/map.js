@@ -20,7 +20,7 @@ var GoogleMap = function(locations, displayingLocation) {
 GoogleMap.prototype.clickLocationResponse = function(location)  {
     var self = this;
     var marker = location.marker;
-    self.map.panTo(location.latLng());
+    map.panTo(location.latLng());
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function () {
         marker.setAnimation(null);
@@ -104,11 +104,6 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
             content: self.getErrorWindowContent()
         });
     }  else  {
-        /*
-        self.infowindow = new google.maps.InfoWindow({
-            content: self.infowindowContent
-        });*/
-
 
         self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
         self.displayingLocation().website(placeDetails.website);
@@ -118,7 +113,7 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
 
 
         self.infowindow = new google.maps.InfoWindow({
-            content: $('#infowindowContent').clone()[0]
+            content: self.getInfoWindowContent()
         });
     }
     self.infowindow.open(map, self.displayingLocation().marker);
@@ -128,36 +123,34 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
 GoogleMap.prototype.getErrorWindowContent = function()  {
     var self = this;
     var content = `
-    <div class="row">
-        <div class="col-xs-12">
-            <h4>{0}</h4>
-            <p id="error">Error getting information from Google place details service.</p>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>{0}</h4>
+                <p id="error">Error getting information from Google place details service.</p>
+            </div>
         </div>
-    </div>
-    `.format(self.displayingLocation().name());
+        `.format(self.displayingLocation().name());
     return content;
 };
 
 
-/*
-GoogleMap.prototype.infowindowContent = `
-<div data-bind="with: displayingLocation">
-    <div class="row">
-        <div class="col-xs-12">
-            <h4 data-bind="text: name"></h4>
-            <p id="open" data-bind="visible: open_now"><b>Open</b></p>
-            <p id="closed" data-bind="visible: !open_now()"><b>Closed</b></p>
-            <p>Phone&nbsp;:&nbsp;<span data-bind="text: formatted_phone_number"></span></p>
-            <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
-            <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
-            <p>Open Hours&nbsp;:&nbsp;</p>
-            <ul data-bind="foreach: open_text">
-                <li data-bind="text: $data"></li>
-            </ul>
+
+GoogleMap.prototype.getInfoWindowContent = function()  {
+    var self =  this;
+    var curr = self.displayingLocation();
+    var content = `
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>{0}</h4>
+                <p>Phone&nbsp;:&nbsp;<span>{1}</span></p>
+                <p>Website&nbsp;:&nbsp;<a href="{2}">{2}</a></p>
+                <p>Rating&nbsp;:&nbsp;<span>{3}</span></p>
+            </div>
         </div>
-    </div>
-</div>
-`;*/
+        `.format(curr.name(), curr.formatted_phone_number(),
+                curr.website(), curr.rating());
+    return content;
+};
 
 
 GoogleMap.prototype.showAllMarkers = function() {
