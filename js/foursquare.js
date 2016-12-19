@@ -42,24 +42,6 @@ Foursquare.prototype.getResults = function(location, callback, googleMap)  {
         console.log(foursquareResults);
         console.log(foursquareResults.length);
         callback(foursquareResults, googleMap);
-        /*
-        console.log(venue.name);
-        console.log(venue.stats.checkinsCount);
-        console.log(venue.url);*/
-        // console.log(trendingVenues[0]);
-        //console.log(data.meta.code);
-        /*
-        var results = data.data;
-        for(var i in results){
-            var result = results[i];
-            if(result.type === 'image'){
-                var formattedResult = {
-                    image: result.images.thumbnail.url,
-                    link: result.link
-                };
-                self.instagramResults.push(formattedResult);
-            }
-        }*/
     })
     .fail(function(){
         //location.foursquareSuccess(false);
