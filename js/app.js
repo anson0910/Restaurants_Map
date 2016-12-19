@@ -2,6 +2,27 @@
 
 var Location = function(data)  {
 
+    // places service information
+    // true if success getting data from places service
+    this.placesServiceSuccess = ko.observable(false);
+    this.name = ko.observable(data.name);
+    this.address = ko.observable(data.address);
+    this.latLng = ko.observable(data.latLng);
+    this.placeId = ko.observable(data.placeId);
+    this.formatted_phone_number = ko.observable();
+    this.website = ko.observable();
+    this.rating = ko.observable();
+    this.open_now = ko.observable();
+
+    // foursquare information
+    this.foursquareSuccess = ko.observable(false);
+    this.foursquareResults = ko.observableArray([]);
+
+    this.marker = null;
+    // whether or not display this location
+    this.display = ko.observable(true);
+
+    /*
     this.name = ko.observable(data.name);
     // whether or not display this location
     this.display = ko.observable(true);
@@ -13,7 +34,8 @@ var Location = function(data)  {
     this.placeId = data.placeId;
     this.formatted_phone_number = null;
     this.website = '';
-    this.rating = 0;    
+    this.rating = 0;
+    */
 };
 
 
@@ -29,10 +51,6 @@ var ViewModel = function()  {
     this.displayAlert = ko.computed(function()  {
         return self.locations().length > 0;
     }, this);
-
-    /*
-    self.init = function()  {
-    };*/
 
 
     // response when user clicks on list item in restaurant list

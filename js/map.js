@@ -64,7 +64,7 @@ GoogleMap.prototype.populateLocations = function(results) {
 GoogleMap.prototype.addMarker = function(location) {
     var self = this;
     var marker = new google.maps.Marker({
-        position: location.latLng,
+        position: location.latLng(),
         map: map,
         animation: google.maps.Animation.DROP
     });
@@ -84,7 +84,7 @@ GoogleMap.prototype.addMarker = function(location) {
 // search for info from places service
 GoogleMap.prototype.renderInfowindow = function()  {
     var self = this;
-    self.places.getDetails({placeId: self.displayingLocation().placeId}, function(placeDetails, status) {
+    self.places.getDetails({placeId: self.displayingLocation().placeId()}, function(placeDetails, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK)  {
             self.openInfoWindow(placeDetails);
         }   else  {
@@ -99,24 +99,43 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
     var self = this;
     if (self.infowindow != null)  self.infowindow.close();
 
-    if (placeDetails === null)  {       // display error div if failure
-        self.infowindow = new google.maps.InfoWindow({
-            content: self.getErrorWindowContent()
-        });
+    if (placeDetails === null)  {
+        self.displayingLocation().placesServiceSuccess(false);
     }  else  {
+        self.displayingLocation().placesServiceSuccess(true);
+        self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
+        self.displayingLocation().website(placeDetails.website);
+        self.displayingLocation().rating(placeDetails.rating);
+        self.displayingLocation().open_now(placeDetails.opening_hours.open_now);
 
-        self.displayingLocation().formatted_phone_number = placeDetails.formatted_phone_number;
-        self.displayingLocation().website = placeDetails.website;
-        self.displayingLocation().rating = placeDetails.rating;
-
-        self.infowindow = new google.maps.InfoWindow({
-            content: self.getInfoWindowContent()
-        });
+        Foursquare.prototype.getResults(self.displayingLocation(), self.callback, self);
     }
+
+
+};
+
+GoogleMap.prototype.callback = function(foursquareResults, googleMap)  {
+    var self = googleMap;
+    if (foursquareResults)  {
+        console.log(foursquareResults);
+        var i, venue;
+        self.displayingLocation().foursquareSuccess(true);
+        self.displayingLocation().foursquareResults(foursquareResults);
+        /*
+        for (i = 0; i < foursquareResults.length; i++)  {
+            console.log('here');
+            venue = foursquareResults[i];
+            self.displayingLocation().foursquareResults.push(venue);
+        }*/
+    }
+
+    self.infowindow = new google.maps.InfoWindow({
+        content: $('#infowindowContent').html()
+    });
     self.infowindow.open(map, self.displayingLocation().marker);
 };
 
-
+/*
 GoogleMap.prototype.getErrorWindowContent = function()  {
     var self = this;
     var content = `
@@ -128,16 +147,17 @@ GoogleMap.prototype.getErrorWindowContent = function()  {
         </div>
         `.format(self.displayingLocation().name());
     return content;
-};
+};*/
 
 
-
+/*
 GoogleMap.prototype.getInfoWindowContent = function()  {
     var self =  this;
     var curr = self.displayingLocation();
     var content = `
-        <div class="row">
+        <div class="row" data-bind="with: displayingLocation">
             <div class="col-xs-12">
+                <h4 data-bind="text: name">what</h4>
                 <h4>{0}</h4>
                 <p>Phone&nbsp;:&nbsp;<span>{1}</span></p>
                 <p>Website&nbsp;:&nbsp;<a href="{2}">{2}</a></p>
@@ -147,7 +167,7 @@ GoogleMap.prototype.getInfoWindowContent = function()  {
         `.format(curr.name(), curr.formatted_phone_number,
                 curr.website, curr.rating);
     return content;
-};
+};*/
 
 
 GoogleMap.prototype.showAllMarkers = function() {

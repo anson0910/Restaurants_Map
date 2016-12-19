@@ -53,12 +53,40 @@
     </div>
 
 
+    <div style="display:none">
+        <div id="infowindowContent">
+            <div class="row" data-bind="with: displayingLocation">
+                <div class="col-xs-12">
+                    <h4 data-bind="text: name"></h4>
+                    <div data-bind="visible: placesServiceSuccess">
+                        <p id="open" data-bind="visible: open_now"><b>Open</b></p>
+                        <p id="closed" data-bind="visible: !open_now()"><b>Closed</b></p>
+                        <p>Phone&nbsp;:&nbsp;<span data-bind="text: formatted_phone_number"></span></p>
+                        <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
+                        <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
+
+                        <span data-bind="visible: foursquareSuccess">what</span>
+                        <ul data-bind="foreach: foursquareResults">
+                            <li data-bind="text: name">what</li>
+                        </ul>
+                    </div>
+
+                    <div data-bind="visible: !placesServiceSuccess()">
+                        <p id="error">Error getting information from Google place details service.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/foursquare.js"></script>
     <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
     <script async defer
         src="http://maps.googleapis.com/maps/api/js?libraries=places&callback=init"
         onerror="googleError()">
