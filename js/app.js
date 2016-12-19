@@ -1,3 +1,5 @@
+'use strict';
+
 var Location = function(data)  {
     // places service information
     this.name = ko.observable(data.name);

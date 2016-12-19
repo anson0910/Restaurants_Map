@@ -1,3 +1,5 @@
+'use strict';
+
 var map;
 var initLat = 37.765, initLng = -122.447;
 
@@ -18,7 +20,7 @@ var GoogleMap = function(locations, displayingLocation) {
 GoogleMap.prototype.clickLocationResponse = function(location)  {
     var self = this;
     var marker = location.marker;
-    //self.map.panTo(location.latLng());
+    self.map.panTo(location.latLng());
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function () {
         marker.setAnimation(null);
@@ -102,11 +104,18 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
             content: $('#errorInfowindowContent').clone()[0]
         });
     }  else  {
+        /*
+        self.infowindow = new google.maps.InfoWindow({
+            content: self.infowindowContent
+        });*/
+
+
         self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
         self.displayingLocation().website(placeDetails.website);
         self.displayingLocation().rating(placeDetails.rating);
         self.displayingLocation().open_now(placeDetails.opening_hours.open_now);
         self.displayingLocation().open_text(placeDetails.opening_hours.weekday_text);
+
 
         self.infowindow = new google.maps.InfoWindow({
             content: $('#infowindowContent').clone()[0]
@@ -114,6 +123,26 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
     }
     self.infowindow.open(map, self.displayingLocation().marker);
 };
+
+/*
+GoogleMap.prototype.infowindowContent = `
+<div data-bind="with: displayingLocation">
+    <div class="row">
+        <div class="col-xs-12">
+            <h4 data-bind="text: name"></h4>
+            <p id="open" data-bind="visible: open_now"><b>Open</b></p>
+            <p id="closed" data-bind="visible: !open_now()"><b>Closed</b></p>
+            <p>Phone&nbsp;:&nbsp;<span data-bind="text: formatted_phone_number"></span></p>
+            <p>Website&nbsp;:&nbsp;<a data-bind="text: website, attr: { href: website}"></a></p>
+            <p>Rating&nbsp;:&nbsp;<span data-bind="text: rating"></span></p>
+            <p>Open Hours&nbsp;:&nbsp;</p>
+            <ul data-bind="foreach: open_text">
+                <li data-bind="text: $data"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+`;*/
 
 
 GoogleMap.prototype.showAllMarkers = function() {
