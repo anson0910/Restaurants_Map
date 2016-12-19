@@ -101,7 +101,7 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
 
     if (placeDetails === null)  {       // display error div if failure
         self.infowindow = new google.maps.InfoWindow({
-            content: $('#errorInfowindowContent').clone()[0]
+            content: self.getErrorWindowContent()
         });
     }  else  {
         /*
@@ -123,6 +123,21 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
     }
     self.infowindow.open(map, self.displayingLocation().marker);
 };
+
+
+GoogleMap.prototype.getErrorWindowContent = function()  {
+    var self = this;
+    var content = `
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>{0}</h4>
+            <p id="error">Error getting information from Google place details service.</p>
+        </div>
+    </div>
+    `.format(self.displayingLocation().name());
+    return content;
+};
+
 
 /*
 GoogleMap.prototype.infowindowContent = `
