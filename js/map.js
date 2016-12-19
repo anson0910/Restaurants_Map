@@ -106,7 +106,6 @@ GoogleMap.prototype.renderInfowindow = function()  {
 GoogleMap.prototype.openInfoWindow = function(foursquareResults, googleMap)  {
     var self = googleMap;
     if (foursquareResults.length > 0)  {
-        console.log('here');
         self.displayingLocation().foursquareSuccess(true);
         self.displayingLocation().foursquareResults(foursquareResults);
     }   else {

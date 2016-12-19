@@ -21,7 +21,7 @@ Foursquare.prototype.getResults = function(location, openInfoWindowCallback, goo
     $.ajax({
         method: 'GET',
         dataType: 'jsonp',
-        url: 'https://apii.foursquare.com/v2/venues/trending',
+        url: 'https://api.foursquare.com/v2/venues/trending',
         data: {
             oauth_token: 'OFREDHZW2VF3DVRJ00UE1DPDGTNSDSI5M3NSFZBHEUJ05US0',
             ll: ll,
