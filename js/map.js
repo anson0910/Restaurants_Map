@@ -64,7 +64,7 @@ GoogleMap.prototype.populateLocations = function(results) {
 GoogleMap.prototype.addMarker = function(location) {
     var self = this;
     var marker = new google.maps.Marker({
-        position: location.latLng(),
+        position: location.latLng,
         map: map,
         animation: google.maps.Animation.DROP
     });
@@ -84,7 +84,7 @@ GoogleMap.prototype.addMarker = function(location) {
 // search for info from places service
 GoogleMap.prototype.renderInfowindow = function()  {
     var self = this;
-    self.places.getDetails({placeId: self.displayingLocation().placeId()}, function(placeDetails, status) {
+    self.places.getDetails({placeId: self.displayingLocation().placeId}, function(placeDetails, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK)  {
             self.openInfoWindow(placeDetails);
         }   else  {
@@ -105,12 +105,9 @@ GoogleMap.prototype.openInfoWindow = function(placeDetails)  {
         });
     }  else  {
 
-        self.displayingLocation().formatted_phone_number(placeDetails.formatted_phone_number);
-        self.displayingLocation().website(placeDetails.website);
-        self.displayingLocation().rating(placeDetails.rating);
-        self.displayingLocation().open_now(placeDetails.opening_hours.open_now);
-        self.displayingLocation().open_text(placeDetails.opening_hours.weekday_text);
-
+        self.displayingLocation().formatted_phone_number = placeDetails.formatted_phone_number;
+        self.displayingLocation().website = placeDetails.website;
+        self.displayingLocation().rating = placeDetails.rating;
 
         self.infowindow = new google.maps.InfoWindow({
             content: self.getInfoWindowContent()
@@ -147,8 +144,8 @@ GoogleMap.prototype.getInfoWindowContent = function()  {
                 <p>Rating&nbsp;:&nbsp;<span>{3}</span></p>
             </div>
         </div>
-        `.format(curr.name(), curr.formatted_phone_number(),
-                curr.website(), curr.rating());
+        `.format(curr.name(), curr.formatted_phone_number,
+                curr.website, curr.rating);
     return content;
 };
 

@@ -1,21 +1,19 @@
 'use strict';
 
 var Location = function(data)  {
-    // places service information
-    this.name = ko.observable(data.name);
-    this.address = ko.observable(data.address);
-    this.latLng = ko.observable(data.latLng);
-    this.placeId = ko.observable(data.placeId);
-    this.formatted_phone_number = ko.observable();
-    this.website = ko.observable();
-    this.rating = ko.observable();
 
-    this.marker = null;
+    this.name = ko.observable(data.name);
     // whether or not display this location
     this.display = ko.observable(true);
-    this.text = ko.computed(function()  {
-        return this.name() + ',\xa0\xa0\xa0\xa0' + this.address();
-    }, this);
+    this.marker = null;
+
+    // places service information
+    this.address = data.address;
+    this.latLng = data.latLng;
+    this.placeId = data.placeId;
+    this.formatted_phone_number = null;
+    this.website = '';
+    this.rating = 0;    
 };
 
 
