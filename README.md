@@ -1,6 +1,6 @@
 # Restaurants_Map
 Single-page application featuring a map of restaurants in San Francisco. <br>
-Utilizes KnockoutJS, Google Map API, and Google Places Service API.
+Utilizes KnockoutJS, Google Map API, Google Places Service API, and Foursquare API.
 
 ## To use the Map:
 1. Clone or download repository.
