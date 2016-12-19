@@ -120,40 +120,6 @@ GoogleMap.prototype.openInfoWindow = function(foursquareResults, googleMap)  {
     self.infowindow.open(map, self.displayingLocation().marker);
 };
 
-/*
-GoogleMap.prototype.getErrorWindowContent = function()  {
-    var self = this;
-    var content = `
-        <div class="row">
-            <div class="col-xs-12">
-                <h4>{0}</h4>
-                <p id="error">Error getting information from Google place details service.</p>
-            </div>
-        </div>
-        `.format(self.displayingLocation().name());
-    return content;
-};*/
-
-
-/*
-GoogleMap.prototype.getInfoWindowContent = function()  {
-    var self =  this;
-    var curr = self.displayingLocation();
-    var content = `
-        <div class="row" data-bind="with: displayingLocation">
-            <div class="col-xs-12">
-                <h4 data-bind="text: name">what</h4>
-                <h4>{0}</h4>
-                <p>Phone&nbsp;:&nbsp;<span>{1}</span></p>
-                <p>Website&nbsp;:&nbsp;<a href="{2}">{2}</a></p>
-                <p>Rating&nbsp;:&nbsp;<span>{3}</span></p>
-            </div>
-        </div>
-        `.format(curr.name(), curr.formatted_phone_number,
-                curr.website, curr.rating);
-    return content;
-};*/
-
 
 GoogleMap.prototype.showAllMarkers = function() {
     var self = this;

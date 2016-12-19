@@ -21,21 +21,6 @@ var Location = function(data)  {
     this.marker = null;
     // whether or not display this location
     this.display = ko.observable(true);
-
-    /*
-    this.name = ko.observable(data.name);
-    // whether or not display this location
-    this.display = ko.observable(true);
-    this.marker = null;
-
-    // places service information
-    this.address = data.address;
-    this.latLng = data.latLng;
-    this.placeId = data.placeId;
-    this.formatted_phone_number = null;
-    this.website = '';
-    this.rating = 0;
-    */
 };
 
 
