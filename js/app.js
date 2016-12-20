@@ -46,7 +46,7 @@ var ViewModel = function()  {
 
     // filter markers and list elements according to search input
     self.filterList = function()  {
-        var str = self.searchInput().toLowerCase(), location, name;
+        var str = self.searchInput().toLowerCase(), i, location, name;
         if (str === '')  {
             self.googleMap.showAllMarkers();
         }   else  {

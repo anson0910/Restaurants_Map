@@ -114,7 +114,8 @@ GoogleMap.prototype.openInfoWindow = function(foursquareResults, googleMap)  {
     }
 
     self.infowindow = new google.maps.InfoWindow({
-        content: $('#infowindowContent').html()
+        //content: $('#infowindowContent').html()
+        content: self.getInfoWindowContent()
     });
     self.infowindow.open(map, self.displayingLocation().marker);
 };
@@ -143,4 +144,43 @@ GoogleMap.prototype.hideMarker = function(location)  {
     var self = this;
     location.marker.setVisible(false);
     location.display(false);
+};
+
+
+GoogleMap.prototype.getInfoWindowContent = function()  {
+    var self =  this;
+    var curr = self.displayingLocation(), i, venue;
+    var content = `
+        <div class="row">
+            <div class="col-xs-12">`;
+
+        content += '<h4>{0}</h4>'.format(curr.name());
+
+        if (curr.placesServiceSuccess())  {
+            content += '<p>Phone&nbsp;:&nbsp;<span>{0}</span></p>'.format(curr.formatted_phone_number());
+            content += '<p>Website&nbsp;:&nbsp;<a href="{0}">{0}</a></p>'.format(curr.website());
+            content += '<p>Rating&nbsp;:&nbsp;<span>{0}</span></p>'.format(curr.rating());
+            if (curr.foursquareSuccess())  {
+                content += '<ul>';
+                for (i = 0; i < curr.foursquareResults().length; i++) {
+                    venue = curr.foursquareResults()[i];
+                    content += '<li>';
+                    content += '<div>{0}</div>'.format(venue.name);
+                    content += '<div>Checkins on Foursquare&nbsp;:&nbsp;<span>{0}</span></div>'.format(venue.checkins);
+                    content += '<div>Website&nbsp;:&nbsp;<a href="{0}">{0}</a></div>'.format(venue.url);
+                    content += '</li>';
+                }
+                content += '</ul>';
+            }   else {
+                content += '  <p class="error">Error getting information from Foursquares service.</p>';
+            }
+        }   else {
+            content += '<p class="error">Error getting information from Google place details service.</p>';
+        }
+        content += `
+            </div>
+        </div>
+        `;
+
+    return content;
 };
